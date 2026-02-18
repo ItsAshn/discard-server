@@ -2,7 +2,7 @@
 
 The self-hostable backend for **Discard** — a locally-hosted Discord alternative.
 
-Connect with the [desktop](https://github.com/ItsAshn/discard) or mobile client.
+Desktop and mobile client coming in the next few days.
 
 ---
 
@@ -14,10 +14,10 @@ Docker is the easiest way to run and **keep the server up to date**. No Node.js 
 
 ```bash
 # 1. Download the compose file
-curl -O https://raw.githubusercontent.com/ItsAshn/discard-server/main/docker-compose.yml
+curl -O https://raw.githubusercontent.com/ItsAshn/discard-server/master/docker-compose.yml
 
 # 2. Create your .env (edit the values before starting)
-curl -O https://raw.githubusercontent.com/ItsAshn/discard-server/main/.env.example
+curl -O https://raw.githubusercontent.com/ItsAshn/discard-server/master/.env.example
 cp .env.example .env
 ```
 
