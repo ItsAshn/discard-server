@@ -74,8 +74,14 @@ JWT_SECRET=change_this_to_a_long_random_secret
 SERVER_DB_PATH=./server.db
 
 # mediasoup (voice chat) settings
-MEDIASOUP_LISTEN_IP=0.0.0.0       # Set to your network interface IP
-PUBLIC_ADDRESS=localhost           # Set to your public IP or domain
+# PUBLIC_ADDRESS must be a plain IPv4 address — NOT a hostname like "localhost".
+# Chromium resolves "localhost" to ::1 (IPv6) but mediasoup binds on IPv4 only,
+# which causes ICE negotiation to fail silently and voice chat to produce no audio.
+#   Local testing  → 127.0.0.1
+#   LAN hosting    → your LAN IP  (e.g. 192.168.1.100)
+#   Public hosting → your public IPv4  (e.g. 203.0.113.42)
+MEDIASOUP_LISTEN_IP=0.0.0.0
+PUBLIC_ADDRESS=127.0.0.1
 RTC_MIN_PORT=40000
 RTC_MAX_PORT=49999
 ```
@@ -107,8 +113,9 @@ npm start
 
 ## Hosting on a LAN or the Internet
 
-1. Set `MEDIASOUP_LISTEN_IP` to `0.0.0.0` (or a specific network interface).
-2. Set `PUBLIC_ADDRESS` to your machine's LAN IP or public domain.
+1. Set `MEDIASOUP_LISTEN_IP` to `0.0.0.0` (binds to all interfaces).
+2. Set `PUBLIC_ADDRESS` to your machine's **IPv4 address** or a hostname that resolves to one.
+   > ⚠️ **Do not use `localhost` here.** The Discard desktop client runs on Chromium, which resolves `localhost` to `::1` (IPv6). Because mediasoup only binds on IPv4, this causes ICE negotiation to fail silently — clients connect to the server but hear no voice audio. Always use a dotted-decimal IPv4 address (e.g. `192.168.1.100` for LAN, `203.0.113.42` for public).
 3. Open firewall ports:
    - `SERVER_PORT` (TCP) — for API and WebSocket connections
    - `RTC_MIN_PORT`–`RTC_MAX_PORT` (UDP) — for voice chat (mediasoup WebRTC)
@@ -116,15 +123,15 @@ npm start
 
 ## Environment Variables
 
-| Variable              | Default             | Description                                                       |
-| --------------------- | ------------------- | ----------------------------------------------------------------- |
-| `SERVER_PORT`         | `5000`              | Port the server listens on                                        |
-| `SERVER_NAME`         | `My Discard Server` | Name shown to clients                                             |
-| `SERVER_DESCRIPTION`  | _(empty)_           | Server description                                                |
-| `SERVER_PASSWORD`     | _(empty)_           | Optional password required to register an account (open if blank) |
-| `JWT_SECRET`          | _(must be set)_     | Secret used to sign auth tokens                                   |
-| `SERVER_DB_PATH`      | `./server.db`       | Path to the SQLite database file                                  |
-| `MEDIASOUP_LISTEN_IP` | `127.0.0.1`         | IP mediasoup binds to internally                                  |
-| `PUBLIC_ADDRESS`      | `localhost`         | Public IP/hostname for WebRTC candidates                          |
-| `RTC_MIN_PORT`        | `40000`             | Start of UDP port range for WebRTC                                |
-| `RTC_MAX_PORT`        | `49999`             | End of UDP port range for WebRTC                                  |
+| Variable              | Default             | Description                                                                                                                                                                                                                                                                                                                  |
+| --------------------- | ------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `SERVER_PORT`         | `5000`              | Port the server listens on                                                                                                                                                                                                                                                                                                   |
+| `SERVER_NAME`         | `My Discard Server` | Name shown to clients                                                                                                                                                                                                                                                                                                        |
+| `SERVER_DESCRIPTION`  | _(empty)_           | Server description                                                                                                                                                                                                                                                                                                           |
+| `SERVER_PASSWORD`     | _(empty)_           | Optional password required to register an account (open if blank)                                                                                                                                                                                                                                                            |
+| `JWT_SECRET`          | _(must be set)_     | Secret used to sign auth tokens                                                                                                                                                                                                                                                                                              |
+| `SERVER_DB_PATH`      | `./server.db`       | Path to the SQLite database file                                                                                                                                                                                                                                                                                             |
+| `MEDIASOUP_LISTEN_IP` | `0.0.0.0`           | IP mediasoup binds to internally (use `0.0.0.0` for all interfaces)                                                                                                                                                                                                                                                          |
+| `PUBLIC_ADDRESS`      | `127.0.0.1`         | **Must be a dotted-decimal IPv4 address.** Used as the ICE candidate address sent to clients. Setting this to a hostname (e.g. `localhost`) causes the Electron client to resolve it to IPv6 (`::1`), which breaks voice audio entirely. Use `127.0.0.1` locally, your LAN IP on a LAN, or your public IPv4 on the internet. |
+| `RTC_MIN_PORT`        | `40000`             | Start of UDP port range for WebRTC                                                                                                                                                                                                                                                                                           |
+| `RTC_MAX_PORT`        | `49999`             | End of UDP port range for WebRTC                                                                                                                                                                                                                                                                                             |
