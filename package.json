@@ -1,6 +1,6 @@
 {
   "name": "discard-server",
-  "version": "0.4.6",
+  "version": "0.4.7",
   "description": "Locally-hosted Discard server — run this on your machine to host a community",
   "main": "src/index.js",
   "scripts": {
