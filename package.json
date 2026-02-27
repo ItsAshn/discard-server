@@ -1,13 +1,7 @@
 {
-<<<<<<< Updated upstream
-  "name": "discard-server",
-  "version": "0.4.7",
-  "description": "Locally-hosted Discard server — run this on your machine to host a community",
-=======
   "name": "sloth-voice-server",
-  "version": "0.3.2",
+  "version": "0.4.7",
   "description": "Locally-hosted Sloth Voice server — run this on your machine to host a community",
->>>>>>> Stashed changes
   "main": "src/index.js",
   "scripts": {
     "start": "node --experimental-sqlite src/index.js",
